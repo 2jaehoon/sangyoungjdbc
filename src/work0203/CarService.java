@@ -19,8 +19,6 @@ public class CarService {
 			
 			for(String carInf : list) {
 				outData.append(carInf).append(" ");
-				
-				
 			}
 			
 			JTextArea jta = new JTextArea(5,60);

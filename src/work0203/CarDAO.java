@@ -29,7 +29,7 @@ public class CarDAO {
 			selectCar
 			.append("	select cc.country, cc.maker, cma.model, cmo.car_year, cmo.price, cmo.car_option 			") 	
 			.append("	from car_country cc, car_maker cma, car_model cmo		") 	
-			.append("	where (cc.maker=cma.maker and cma.model=cmo.model) and (cc.maker = '").append(maker).append("')");
+			.append("	where (cc.maker=cma.maker and cma.model=cmo.model(+)) and (cc.maker = '").append(maker).append("')");
 			
 			
 
@@ -48,15 +48,7 @@ public class CarDAO {
 			
 			
 		}finally {
-			if(rs!=null) {
-				rs.close();
-			}
-			if(stmt!=null) {
-				stmt.close();
-			}
-			if(con!=null) {
-				con.close();
-			}
+			dbCon.dbClose(null, stmt, con);
 		}
 		
 		

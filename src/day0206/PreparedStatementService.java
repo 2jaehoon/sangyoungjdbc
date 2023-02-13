@@ -1,8 +1,12 @@
 package day0206;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import day0202.TestJdbcVO;
 
@@ -166,68 +170,68 @@ public class PreparedStatementService {
 	}//remove
 //	
 //	
-//	public void searchAll() {
-//		PreparedStatementDAO stmtDAO = new PreparedStatementDAO();
-//		
-//		try {
-//			List<TestJdbcVO> list = stmtDAO.selectAll();
-//			if( list.isEmpty() ) {
-//				System.out.println("레코드가 존재하지 않습니다.");
-//			}//end if
-//			
-//			StringBuilder outData = new StringBuilder();
-//			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy EEEE");
-//			for(TestJdbcVO tjvo : list) {
-//				outData.append(tjvo.getNum() ).append(" ")
-//				.append(tjvo.getName()).append(" ")
-//				.append(tjvo.getGender()).append(" ")
-//				.append(tjvo.getHeight()).append(" ")
-//				.append(sdf.format(tjvo.getInput_date()) ).append("\n");
-//			}//end for
-//			
-//			JTextArea jta  = new JTextArea(5,60);
-//			jta.setText(outData.toString());
-//			
-//			JScrollPane jsp = new JScrollPane(jta);
-//			
-//			JOptionPane.showMessageDialog(null, jsp);
-//			
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}//end catch
-//	}//searchAll
+	public void searchAll() {
+		PreparedStatementDAO pstmtDAO = PreparedStatementDAO.getInstance();
+		
+		try {
+			List<TestJdbcVO> list = pstmtDAO.selectAll();
+			if( list.isEmpty() ) {
+				System.out.println("레코드가 존재하지 않습니다.");
+			}//end if
+			
+			StringBuilder outData = new StringBuilder();
+			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy EEEE");
+			for(TestJdbcVO tjvo : list) {
+				outData.append(tjvo.getNum() ).append(" ")
+				.append(tjvo.getName()).append(" ")
+				.append(tjvo.getGender()).append(" ")
+				.append(tjvo.getHeight()).append(" ")
+				.append(sdf.format(tjvo.getInput_date()) ).append("\n");
+			}//end for
+			
+			JTextArea jta  = new JTextArea(5,60);
+			jta.setText(outData.toString());
+			
+			JScrollPane jsp = new JScrollPane(jta);
+			
+			JOptionPane.showMessageDialog(null, jsp);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}//end catch
+	}//searchAll
 //	
-//	public void searchOne() {
-//		int num = 2;
-//		
-//		PreparedStatementDAO stmtDAO = new PreparedStatementDAO();
-//		try {
-//			TestJdbcVO tjVO = stmtDAO.selectOne(num);
-//			StringBuilder searchResult = new StringBuilder();
-//			if(tjVO == null) {
-//				searchResult.append("검색된 결과가 없습니다.");
-//			}else {
-//				searchResult.append("검색 결과 \n")
-//				.append("이름 : ").append(tjVO.getName()).append("\n")
-//				.append("성별 : ").append(tjVO.getGender()).append("\n")
-//				.append("키 : ").append(tjVO.getHeight()).append("\n")
-//				.append("입력일 : ").append(tjVO.getInput_date()).append("\n");
-//			}
-//			
-//			JOptionPane.showMessageDialog(null, searchResult.toString());
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//	}//searchOne
+	public void searchOne() {
+		int num = 2;
+		
+		PreparedStatementDAO pstmtDAO = PreparedStatementDAO.getInstance();
+		try {
+			TestJdbcVO tjVO = pstmtDAO.selectOne(num);
+			StringBuilder searchResult = new StringBuilder();
+			if(tjVO == null) {
+				searchResult.append("검색된 결과가 없습니다.");
+			}else {
+				searchResult.append("검색 결과 \n")
+				.append("이름 : ").append(tjVO.getName()).append("\n")
+				.append("성별 : ").append(tjVO.getGender()).append("\n")
+				.append("키 : ").append(tjVO.getHeight()).append("\n")
+				.append("입력일 : ").append(tjVO.getInput_date()).append("\n");
+			}
+			
+			JOptionPane.showMessageDialog(null, searchResult.toString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}//searchOne
 	
 	
 
 	public static void main(String[] args) {
 		PreparedStatementService ss = new PreparedStatementService();
 //		ss.add();
-//		ss.modify();
+		ss.modify();
 //		ss.remove();
 //		ss.searchAll();
 //		ss.searchOne();

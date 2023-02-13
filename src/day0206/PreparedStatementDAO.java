@@ -148,23 +148,21 @@ DbConnection dbCon = DbConnection.getInstance();
 			e.printStackTrace();
 		}//end catch
 		
-		String url = "jdbc:oracle:thin:@localhost:1521:orcl";
-		String id="scott";
-		String pass="tiger";
+		DbConnection db  = DbConnection.getInstance();
 		
 		Connection con = null;
-		Statement stmt = null;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
 		try {
 		//2. Connection 얻기
-		con = DriverManager.getConnection(url, id, pass);
+		con = db.getConn();
 		//3. 쿼리문 생성 객체 얻기
-		stmt=con.createStatement();
 		//4. 쿼리문 실행 후 결과 얻기
 		String selectTestjdbc = "select num,name,gender,height,input_date from test_jdbc";
+		pstmt=con.prepareStatement(selectTestjdbc.toString());
 		
-		rs = stmt.executeQuery(selectTestjdbc);//쿼리문을 실행하고 CURSOR의 제어권을 받는다.
+		rs = pstmt.executeQuery();//쿼리문을 실행하고 CURSOR의 제어권을 받는다.
 		
 
 		int num = 0;
@@ -177,30 +175,23 @@ DbConnection dbCon = DbConnection.getInstance();
 		
 		while(rs.next()) { // 레코드가 존재하는지 알 수 없지만 존재한 다면 모든 레코드를 가져와야 한다.
 			//커서 다음에 레코드가 존재하면 TRUE를 반환하여 커서의 위치를 아래로 이동
-			num = rs.getInt("num");    //number = > int
-			name=rs.getString("name");  //vachar2 = > String
-			gender=rs.getString("gender"); //char = > String
-			height=rs.getDouble("height");  //number = > double
-			date = rs.getDate("input_date");  //date = > java.sql.date
+//			num = rs.getInt("num");    //number = > int
+//			name=rs.getString("name");  //vachar2 = > String
+//			gender=rs.getString("gender"); //char = > String
+//			height=rs.getDouble("height");  //number = > double
+//			date = rs.getDate("input_date");  //date = > java.sql.date
 			
 			//조회한 레코드의 컬럼 값을 VO에 저장
-			tjVO = new TestJdbcVO(num, name, gender, height, date);
+			tjVO = new TestJdbcVO(rs.getInt("num"), rs.getString("name"), rs.getString("gender"), rs.getDouble("height"), rs.getDate("input_date"));
 			//같은 이름의 VO객체를 사라지지 않게 관리하기 위해 List에 추가
 			list.add(tjVO);
+			// 생성되는 각각다른 tjVO의 객체 값들을 저장하기 위해 리스트에 에드
+//			System.out.println(tjVO);
 		}//end while
-		
 		
 		}finally {
 			//5. 연결 끊기
-			if(rs!=null) {
-				rs.close();
-			}
-			if(con!=null) {
-				con.close();
-			}
-			if(stmt!=null) {
-				stmt.close();
-			}
+		db.dbClose(rs, pstmt, con);
 			
 		}//end finally
 		
@@ -208,37 +199,35 @@ DbConnection dbCon = DbConnection.getInstance();
 		
 	}//selectAll
 	
+	
+	
+	
+	
+	
 	public TestJdbcVO selectOne( int num ) throws SQLException{
 		TestJdbcVO tjVO = null;
-		//1. 드라이버 로딩
-		try {
-			Class.forName("oracle.jdbc.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
-		String url = "jdbc:oracle:thin:@localhost:1521:orcl";
-		String id = "scott";
-		String pass = "tiger";
+		DbConnection db = DbConnection.getInstance();
 		
 		Connection con = null;
-		Statement stmt = null;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		//1. 드라이버 로딩
 		
 		try {
-		//2. 커넥트 연결
-			con = DriverManager.getConnection(url, id, pass);
-		//3. 쿼리문 생성 객체 얻기
-			stmt = con.createStatement();
+		con = db.getConn();
 		//4. 쿼리문 객체 사용 실행으로 결과 값 얻기
 			StringBuilder selectTestJdbc = new StringBuilder();
 			selectTestJdbc
 			.append("	select		name,gender,height,input_date")
-			.append("	from		test_jdbc")
-			.append("	where		num=").append(num);
+			.append("	from		test_jdbc   ")
+			.append("	where		num=?   ");
 			
-			rs=stmt.executeQuery(selectTestJdbc.toString());
+			pstmt = con.prepareStatement(selectTestJdbc.toString());
+			
+			pstmt.setInt(1, num);
+			
+			rs=pstmt.executeQuery();
 			
 			if(rs.next()) {//검색된 레코드가 존재하니?
 				//VO를 생성하여 검색 결과를 할당
@@ -247,13 +236,13 @@ DbConnection dbCon = DbConnection.getInstance();
 			
 		}finally {
 		//5. 커넥트, 생성객체, 결과 끊기
-			if( rs != null ) { rs.close(); }//end if
-			if( stmt != null ) { stmt.close(); }//end if
-			if( con != null ) { con.close(); }//end if
+			db.dbClose(rs, pstmt, con);
 		}
 		
 		return tjVO;
 	}//selectOne
+	
+	
 	
 	
 	
