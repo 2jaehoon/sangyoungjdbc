@@ -127,6 +127,7 @@ DbConnection dbCon = DbConnection.getInstance();
 			pstmt.setInt(1, num);
 		//5. 쿼리문 수행 후 결과 얻기
 			cnt=pstmt.executeUpdate();
+			System.out.println(cnt);
 		}finally {
 		//6. 연결 끊기
 			dbCon.dbClose(null, pstmt, con);

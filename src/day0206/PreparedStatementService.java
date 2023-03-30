@@ -231,10 +231,11 @@ public class PreparedStatementService {
 	public static void main(String[] args) {
 		PreparedStatementService ss = new PreparedStatementService();
 //		ss.add();
-		ss.modify();
-//		ss.remove();
+//		ss.modify();
+	ss.remove();
 //		ss.searchAll();
-//		ss.searchOne();
+
+		//ss.searchOne();
 	}// main
 
 }// class
